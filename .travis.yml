@@ -1,3 +1,6 @@
 language: ruby
 cache: bundler
 sudo: false
+addons:
+    code_climate:
+        repo_token: de5ec3b2c154a662bae618cc69a69897d7f2745947c33427dfb1a1718b8f932b
