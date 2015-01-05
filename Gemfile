@@ -45,3 +45,5 @@ end
 group :development do
   gem 'guard'
 end
+
+gem "codeclimate-test-reporter", group: :test
