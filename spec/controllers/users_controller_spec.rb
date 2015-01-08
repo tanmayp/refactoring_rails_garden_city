@@ -86,14 +86,14 @@ RSpec.describe UsersController, :type => :controller do
 
       it "assigns a newly created user as @user" do
         post :create, valid_attributes, valid_session
-        expect(assigns(:user)).to be_a(User)
-        expect(assigns(:user)).to be_persisted
+        expect(assigns(:signup).user).to be_a(User)
+        expect(assigns(:signup).user).to be_persisted
       end
 
       it "assigns a newly created account as @account" do
         post :create, valid_attributes, valid_session
-        expect(assigns(:account)).to be_a(Account)
-        expect(assigns(:account)).to be_persisted
+        expect(assigns(:signup).account).to be_a(Account)
+        expect(assigns(:signup).account).to be_persisted
       end
 
       it "decodes google campaign source" do
@@ -102,18 +102,18 @@ RSpec.describe UsersController, :type => :controller do
         request.cookies["t"] = "t"
 
         post :create, valid_attributes, valid_session
-        expect(assigns(:account).campaign_source).to eq("s-ca-t")
+        expect(assigns(:signup).account.campaign_source).to eq("s-ca-t")
       end
 
       it "stores a promo code" do
         post :create, valid_attributes.merge(promo_code: "abc123"), valid_session
-        expect(assigns(:account).promo_code).to eq("abc123")
+        expect(assigns(:signup).account.promo_code).to eq("abc123")
       end
 
       it "stores the remote_ip" do
         expect(request).to receive(:remote_ip).and_return "1.1.1.1"
         post :create, valid_attributes, valid_session
-        expect(assigns(:account).remote_ip).to eq("1.1.1.1")
+        expect(assigns(:signup).account.remote_ip).to eq("1.1.1.1")
       end
 
       it "redirects to the created user" do
@@ -125,7 +125,7 @@ RSpec.describe UsersController, :type => :controller do
     describe "with invalid params" do
       it "assigns a newly created but unsaved user as @user" do
         post :create, {user: invalid_attributes, account: invalid_attributes}, valid_session
-        expect(assigns(:user)).to be_a_new(User)
+        expect(assigns(:signup).user).to be_a_new(User)
       end
 
       it "re-renders the 'new' template" do

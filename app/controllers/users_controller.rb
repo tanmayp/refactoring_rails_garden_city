@@ -27,12 +27,8 @@ class UsersController < ApplicationController
     @signup = Signup.new(params, cookies, request.remote_ip)
 
     if @signup.save
-      @user = @signup.user
-      @account = @signup.account
       redirect_to @signup.user, notice: 'User was successfully created.'
     else
-      @user = @signup.user
-      @account = @signup.account
       render :new
     end
   end

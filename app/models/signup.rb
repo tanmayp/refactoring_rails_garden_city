@@ -5,17 +5,15 @@ class Signup
     @params = params
     @cookies = cookies
     @remote_ip = remote_ip
+    @account = Account.find_or_initialize_by(account_params)
+    @user = @account.users.build(user_params)
   end
 
   def save
-    @account = Account.new(account_params)
-
     campaign_source = [@cookies["s"], @cookies["ca"], @cookies["t"]].join("-")
     @account.campaign_source = campaign_source
     @account.remote_ip = @remote_ip
     @account.promo_code = params[:promo_code]
-
-    @user = @account.users.build(user_params)
 
     @user.save && @account.save
   end
