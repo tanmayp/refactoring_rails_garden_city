@@ -110,6 +110,12 @@ RSpec.describe UsersController, :type => :controller do
         expect(assigns(:account).promo_code).to eq("abc123")
       end
 
+      it "stores the remote_ip" do
+        expect(request).to receive(:remote_ip).and_return "1.1.1.1"
+        post :create, valid_attributes, valid_session
+        expect(assigns(:account).remote_ip).to eq("1.1.1.1")
+      end
+
       it "redirects to the created user" do
         post :create, valid_attributes, valid_session
         expect(response).to redirect_to(User.last)

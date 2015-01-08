@@ -28,6 +28,7 @@ class UsersController < ApplicationController
 
     campaign_source = [cookies["s"], cookies["ca"], cookies["t"]].join("-")
     @account.campaign_source = campaign_source
+    @account.remote_ip = request.remote_ip
     @account.promo_code = params[:promo_code]
 
     @user = @account.users.build(user_params)
