@@ -24,9 +24,10 @@ class UsersController < ApplicationController
   # POST /users
   # POST /users.json
   def create
-    @user = User.new(user_params)
+    @account = Account.new(account_params)
+    @user = @account.users.build(user_params)
 
-    if @user.save
+    if @user.save && @account.save
       redirect_to @user, notice: 'User was successfully created.'
     else
       render :new
@@ -36,6 +37,7 @@ class UsersController < ApplicationController
   # PATCH/PUT /users/1
   # PATCH/PUT /users/1.json
   def update
+    @user.account.update(account_params) if @user.account
     if @user.update(user_params)
       redirect_to @user, notice: 'User was successfully updated.'
     else
@@ -56,8 +58,15 @@ class UsersController < ApplicationController
       @user = User.find(params[:id])
     end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
+    def set_account
+      @account = @user.account
+    end
+
     def user_params
       params.require(:user).permit(:name)
+    end
+
+    def account_params
+      params.require(:account).permit(:name)
     end
 end

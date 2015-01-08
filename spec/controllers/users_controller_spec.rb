@@ -24,7 +24,10 @@ RSpec.describe UsersController, :type => :controller do
   # User. As you add validations to User, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) {
-    { name: "marshally" }
+    {
+      user: { name: "marshally" },
+      account: { name: "code climate" }
+    }
   }
 
   let(:invalid_attributes) {
@@ -38,7 +41,7 @@ RSpec.describe UsersController, :type => :controller do
 
   describe "GET index" do
     it "assigns all users as @users" do
-      user = User.create! valid_attributes
+      user = User.create! valid_attributes[:user]
       get :index, {}, valid_session
       expect(assigns(:users)).to eq([user])
     end
@@ -46,7 +49,7 @@ RSpec.describe UsersController, :type => :controller do
 
   describe "GET show" do
     it "assigns the requested user as @user" do
-      user = User.create! valid_attributes
+      user = User.create! valid_attributes[:user]
       get :show, {:id => user.to_param}, valid_session
       expect(assigns(:user)).to eq(user)
     end
@@ -61,7 +64,7 @@ RSpec.describe UsersController, :type => :controller do
 
   describe "GET edit" do
     it "assigns the requested user as @user" do
-      user = User.create! valid_attributes
+      user = User.create! valid_attributes[:user]
       get :edit, {:id => user.to_param}, valid_session
       expect(assigns(:user)).to eq(user)
     end
@@ -71,71 +74,90 @@ RSpec.describe UsersController, :type => :controller do
     describe "with valid params" do
       it "creates a new User" do
         expect {
-          post :create, {:user => valid_attributes}, valid_session
+          post :create, valid_attributes, valid_session
         }.to change(User, :count).by(1)
       end
 
+      it "creates a new Account" do
+        expect {
+          post :create, valid_attributes, valid_session
+        }.to change(Account, :count).by(1)
+      end
+
       it "assigns a newly created user as @user" do
-        post :create, {:user => valid_attributes}, valid_session
+        post :create, valid_attributes, valid_session
         expect(assigns(:user)).to be_a(User)
         expect(assigns(:user)).to be_persisted
       end
 
+      it "assigns a newly created account as @account" do
+        post :create, valid_attributes, valid_session
+        expect(assigns(:account)).to be_a(Account)
+        expect(assigns(:account)).to be_persisted
+      end
+
       it "redirects to the created user" do
-        post :create, {:user => valid_attributes}, valid_session
+        post :create, valid_attributes, valid_session
         expect(response).to redirect_to(User.last)
       end
     end
 
     describe "with invalid params" do
       it "assigns a newly created but unsaved user as @user" do
-        post :create, {:user => invalid_attributes}, valid_session
+        post :create, {user: invalid_attributes, account: invalid_attributes}, valid_session
         expect(assigns(:user)).to be_a_new(User)
       end
 
       it "re-renders the 'new' template" do
-        post :create, {:user => invalid_attributes}, valid_session
+        post :create, {user: invalid_attributes, account: invalid_attributes}, valid_session
         expect(response).to render_template("new")
       end
     end
   end
 
   describe "PUT update" do
+    let(:new_attributes) {
+      { name: "new-name" }
+    }
     describe "with valid params" do
-      let(:new_attributes) {
-        { name: "new-name" }
-      }
-
       it "updates the requested user" do
-        user = User.create! valid_attributes
-        put :update, {:id => user.to_param, :user => new_attributes}, valid_session
+        user = User.create! valid_attributes[:user]
+        put :update, {:id => user.to_param, :user => new_attributes, account: new_attributes}, valid_session
         user.reload
         expect(assigns(:user).name).to eq("new-name")
       end
 
+      it "updates the user's account" do
+        account = Account.create! valid_attributes[:account]
+        user = account.users.create! valid_attributes[:user]
+
+        put :update, {:id => user.to_param, :user => new_attributes, :account => new_attributes}, valid_session
+        expect(assigns(:user).account.name).to eq("new-name")
+      end
+
       it "assigns the requested user as @user" do
-        user = User.create! valid_attributes
-        put :update, {:id => user.to_param, :user => valid_attributes}, valid_session
+        user = User.create! valid_attributes[:user]
+        put :update, {:id => user.to_param, :user => valid_attributes[:user], account: new_attributes}, valid_session
         expect(assigns(:user)).to eq(user)
       end
 
       it "redirects to the user" do
-        user = User.create! valid_attributes
-        put :update, {:id => user.to_param, :user => valid_attributes}, valid_session
+        user = User.create! valid_attributes[:user]
+        put :update, {:id => user.to_param, :user => valid_attributes[:user], account: new_attributes}, valid_session
         expect(response).to redirect_to(user)
       end
     end
 
     describe "with invalid params" do
       it "assigns the user as @user" do
-        user = User.create! valid_attributes
-        put :update, {:id => user.to_param, :user => invalid_attributes}, valid_session
+        user = User.create! valid_attributes[:user]
+        put :update, {:id => user.to_param, user: invalid_attributes, account: new_attributes}, valid_session
         expect(assigns(:user)).to eq(user)
       end
 
       it "re-renders the 'edit' template" do
-        user = User.create! valid_attributes
-        put :update, {:id => user.to_param, :user => invalid_attributes}, valid_session
+        user = User.create! valid_attributes[:user]
+        put :update, {:id => user.to_param, user: invalid_attributes, account: new_attributes}, valid_session
         expect(response).to render_template("edit")
       end
     end
@@ -143,14 +165,14 @@ RSpec.describe UsersController, :type => :controller do
 
   describe "DELETE destroy" do
     it "destroys the requested user" do
-      user = User.create! valid_attributes
+      user = User.create! valid_attributes[:user]
       expect {
         delete :destroy, {:id => user.to_param}, valid_session
       }.to change(User, :count).by(-1)
     end
 
     it "redirects to the users list" do
-      user = User.create! valid_attributes
+      user = User.create! valid_attributes[:user]
       delete :destroy, {:id => user.to_param}, valid_session
       expect(response).to redirect_to(users_url)
     end

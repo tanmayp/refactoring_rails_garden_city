@@ -12,9 +12,15 @@
   <% end %>
 
   <div class="field">
-    <%= f.label :name %><br>
+    <%= f.label :username %><br>
     <%= f.text_field :name %>
   </div>
+  <%= fields_for :account do |account| %>
+    <div class="field">
+      <%= account.label :account_name %><br>
+      <%= account.text_field :name %>
+    </div>
+  <% end %>
   <div class="actions">
     <%= f.submit %>
   </div>
