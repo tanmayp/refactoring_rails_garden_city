@@ -28,6 +28,7 @@ class UsersController < ApplicationController
 
     campaign_source = [cookies["s"], cookies["ca"], cookies["t"]].join("-")
     @account.campaign_source = campaign_source
+    @account.promo_code = params[:promo_code]
 
     @user = @account.users.build(user_params)
 
@@ -71,6 +72,6 @@ class UsersController < ApplicationController
     end
 
     def account_params
-      params.require(:account).permit(:name)
+      params.require(:account).permit([:name, :promo_code])
     end
 end

@@ -105,6 +105,11 @@ RSpec.describe UsersController, :type => :controller do
         expect(assigns(:account).campaign_source).to eq("s-ca-t")
       end
 
+      it "stores a promo code" do
+        post :create, valid_attributes.merge(promo_code: "abc123"), valid_session
+        expect(assigns(:account).promo_code).to eq("abc123")
+      end
+
       it "redirects to the created user" do
         post :create, valid_attributes, valid_session
         expect(response).to redirect_to(User.last)

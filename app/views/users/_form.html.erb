@@ -21,6 +21,13 @@
       <%= account.text_field :name %>
     </div>
   <% end %>
+  <% if @user.new_record? %>
+  <div class="field">
+    <%= label_tag :promo_code %><br>
+    <%= text_field_tag :promo_code %>
+  </div>
+  <% end %>
+
   <div class="actions">
     <%= f.submit %>
   </div>
