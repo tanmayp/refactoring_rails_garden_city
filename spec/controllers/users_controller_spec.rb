@@ -96,6 +96,15 @@ RSpec.describe UsersController, :type => :controller do
         expect(assigns(:account)).to be_persisted
       end
 
+      it "decodes google campaign source" do
+        request.cookies["s"] = "s"
+        request.cookies["ca"] = "ca"
+        request.cookies["t"] = "t"
+
+        post :create, valid_attributes, valid_session
+        expect(assigns(:account).campaign_source).to eq("s-ca-t")
+      end
+
       it "redirects to the created user" do
         post :create, valid_attributes, valid_session
         expect(response).to redirect_to(User.last)

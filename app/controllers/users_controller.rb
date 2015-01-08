@@ -25,6 +25,10 @@ class UsersController < ApplicationController
   # POST /users.json
   def create
     @account = Account.new(account_params)
+
+    campaign_source = [cookies["s"], cookies["ca"], cookies["t"]].join("-")
+    @account.campaign_source = campaign_source
+
     @user = @account.users.build(user_params)
 
     if @user.save && @account.save
