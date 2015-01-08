@@ -24,18 +24,15 @@ class UsersController < ApplicationController
   # POST /users
   # POST /users.json
   def create
-    @account = Account.new(account_params)
+    @signup = Signup.new(params, cookies, request.remote_ip)
 
-    campaign_source = [cookies["s"], cookies["ca"], cookies["t"]].join("-")
-    @account.campaign_source = campaign_source
-    @account.remote_ip = request.remote_ip
-    @account.promo_code = params[:promo_code]
-
-    @user = @account.users.build(user_params)
-
-    if @user.save && @account.save
-      redirect_to @user, notice: 'User was successfully created.'
+    if @signup.save
+      @user = @signup.user
+      @account = @signup.account
+      redirect_to @signup.user, notice: 'User was successfully created.'
     else
+      @user = @signup.user
+      @account = @signup.account
       render :new
     end
   end
