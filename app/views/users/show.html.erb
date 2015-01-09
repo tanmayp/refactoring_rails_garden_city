@@ -7,7 +7,7 @@
 
 <p>
   <strong>Account Name:</strong>
-  <%= @user.account.name if @user.account.present? %>
+  <%= Account.for_user(@user).name %>
 </p>
 
 <%= link_to 'Edit', edit_user_path(@user) %> |
