@@ -24,7 +24,7 @@ class UsersController < ApplicationController
   # POST /users
   # POST /users.json
   def create
-    @signup = Signup.new(params, cookies, request.remote_ip)
+    @signup = Signup.new(options)
 
     if @signup.save
       redirect_to @signup.user, notice: 'User was successfully created.'
@@ -52,6 +52,12 @@ class UsersController < ApplicationController
   end
 
   private
+    def options
+      params
+        .merge(remote_ip: request.remote_ip)
+        .merge(s: cookies[:s], ca: cookies[:ca], t: cookies[:t])
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_user
       @user = User.find(params[:id])

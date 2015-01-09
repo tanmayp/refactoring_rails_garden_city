@@ -1,19 +1,17 @@
 class Signup
-  attr_accessor :params, :cookies, :remote_ip
+  attr_accessor :options
 
-  def initialize(params, cookies, remote_ip)
-    @params = params
-    @cookies = cookies
-    @remote_ip = remote_ip
+  def initialize(options)
+    @options = options
+
     @account = Account.find_or_initialize_by(account_params)
     @user = @account.users.build(user_params)
   end
 
   def save
-    campaign_source = [@cookies["s"], @cookies["ca"], @cookies["t"]].join("-")
-    @account.campaign_source = campaign_source
-    @account.remote_ip = @remote_ip
-    @account.promo_code = params[:promo_code]
+    @account.campaign_source = @options.slice("s", "ca","t").values.join("-")
+    @account.remote_ip = @options[:remote_ip]
+    @account.promo_code = @options[:promo_code]
 
     @user.save && @account.save
   end
@@ -29,10 +27,10 @@ class Signup
 private
 
   def user_params
-    @params.require(:user).permit(:name)
+    @options.require(:user).permit(:name)
   end
 
   def account_params
-    @params.require(:account).permit([:name, :promo_code])
+    @options.require(:account).permit([:name, :promo_code])
   end
 end
