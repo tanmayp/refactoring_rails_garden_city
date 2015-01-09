@@ -1,8 +1,13 @@
 <p id="notice"><%= notice %></p>
 
 <p>
-  <strong>Name:</strong>
+  <strong>User Name:</strong>
   <%= @user.name %>
+</p>
+
+<p>
+  <strong>Account Name:</strong>
+  <%= @user.account.name if @user.account.present? %>
 </p>
 
 <%= link_to 'Edit', edit_user_path(@user) %> |
