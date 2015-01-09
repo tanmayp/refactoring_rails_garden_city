@@ -1,18 +1,18 @@
 class Signup
-  attr_accessor :options
+  include ActiveModel::Model
 
-  def initialize(options)
-    @options = options
+  attr_accessor :username, :promo_code, :account_name, :remote_ip
 
-    @account = Account.find_or_initialize_by(account_params)
-    @user = @account.users.build(user_params)
+  def initialize(options = {})
+    @account = Account.find_or_initialize_by(name: options[:account_name])
+    @account.remote_ip = options[:remote_ip]
+    @account.promo_code = options[:promo_code]
+    @account.campaign_source = options.slice("s", "ca","t").values.join("-")
+
+    @user = @account.users.build(name: options[:username])
   end
 
   def save
-    @account.campaign_source = @options.slice("s", "ca","t").values.join("-")
-    @account.remote_ip = @options[:remote_ip]
-    @account.promo_code = @options[:promo_code]
-
     @user.save && @account.save
   end
 

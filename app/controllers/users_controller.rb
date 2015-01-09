@@ -12,25 +12,8 @@ class UsersController < ApplicationController
   def show
   end
 
-  # GET /users/new
-  def new
-    @user = User.new
-  end
-
   # GET /users/1/edit
   def edit
-  end
-
-  # POST /users
-  # POST /users.json
-  def create
-    @signup = Signup.new(options)
-
-    if @signup.save
-      redirect_to @signup.user, notice: 'User was successfully created.'
-    else
-      render :new
-    end
   end
 
   # PATCH/PUT /users/1
@@ -52,12 +35,6 @@ class UsersController < ApplicationController
   end
 
   private
-    def options
-      params
-        .merge(remote_ip: request.remote_ip)
-        .merge(s: cookies[:s], ca: cookies[:ca], t: cookies[:t])
-    end
-
     # Use callbacks to share common setup or constraints between actions.
     def set_user
       @user = User.find(params[:id])
