@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :repositories
+
   resources :users
   get "/signup", to: "users#new"
   # The priority is based upon order of creation: first created -> highest priority.
