@@ -24,11 +24,18 @@ RSpec.describe RepositoriesController, :type => :controller do
   # Repository. As you add validations to Repository, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) {
-    skip("Add a hash of attributes valid for your model")
+    {
+      name: "refactoring_rails",
+      url:  "git@github.com:marshally/refactoring_rails",
+      enabled: true,
+    }
   }
 
   let(:invalid_attributes) {
-    skip("Add a hash of attributes invalid for your model")
+    {
+      name: "refactoring_rails",
+      url:  nil,
+    }
   }
 
   # This should return the minimal set of values that should be in the session
@@ -103,14 +110,21 @@ RSpec.describe RepositoriesController, :type => :controller do
   describe "PUT update" do
     describe "with valid params" do
       let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
+        {
+          name: "refactoring_rails",
+          url:  "git@github.com:marshally/refactoring_rails.git",
+          enabled: true,
+        }
       }
 
       it "updates the requested repository" do
         repository = Repository.create! valid_attributes
-        put :update, {:id => repository.to_param, :repository => new_attributes}, valid_session
-        repository.reload
-        skip("Add assertions for updated state")
+        expect {
+          put :update, {:id => repository.to_param, :repository => new_attributes}, valid_session
+          repository.reload
+        }.to change{ repository.url }
+              .from(valid_attributes[:url])
+              .to eq(new_attributes[:url])
       end
 
       it "assigns the requested repository as @repository" do
