@@ -3,30 +3,20 @@ class Git
     @path = path
   end
 
-  def head
-    repo.head
-  end
+  METHODS = [:head, :tags, :remote_fetch, :log, :blame]
 
-  def tags
-    repo.tags
+  METHODS.each do |method_name|
+    class_eval <<-SRC
+  def #{method_name}(*args)
+    repo.#{method_name}(*args)
   end
-
-  def remote_fetch(name)
-    repo.remote_fetch(name) unless fetch_disabled?
-  end
-
-  def log(commit = 'master', path = nil, options = {})
-    repo.log(commit, path, options)
+SRC
   end
 
   def commit(id)
     Rails.cache.fetch("git.commit(#{id})") do
       repo.commit(id)
     end
-  end
-
-  def blame(file, commit = nil)
-    repo.blame(file, commit)
   end
 
   def repo
