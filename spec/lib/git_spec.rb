@@ -36,9 +36,17 @@ RSpec.describe Git, :type => :model do
   end
 
   context "#commit" do
-    it "works" do
+    before :each do
       Rails.cache.clear
+    end
+
+    it "works" do
       expect(git.repo).to receive(:commit)
+      git.commit("abc123")
+    end
+
+    it "checks the rails cache" do
+      expect(Rails.cache).to receive(:fetch).and_call_original
       git.commit("abc123")
     end
   end
