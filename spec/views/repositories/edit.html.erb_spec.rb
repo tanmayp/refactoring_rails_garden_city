@@ -20,8 +20,6 @@ RSpec.describe "repositories/edit", :type => :view do
       assert_select "input#repository_url[name=?]", "repository[url]"
 
       assert_select "input#repository_enabled[name=?]", "repository[enabled]"
-
-      assert_select "input#repository_user_id[name=?]", "repository[user_id]"
     end
   end
 end

@@ -24,8 +24,8 @@
     <%= f.check_box :enabled %>
   </div>
   <div class="field">
-    <%= f.label :user_id %><br>
-    <%= f.number_field :user_id %>
+    <%= f.label :user %><br>
+    <%= select("user", "user_id", User.all.collect {|p| [ p.name, p.id ] }, { include_blank: true }) %>
   </div>
   <div class="actions">
     <%= f.submit %>
